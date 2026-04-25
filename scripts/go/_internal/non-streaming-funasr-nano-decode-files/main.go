@@ -1,1 +1,0 @@
-../../../../go-api-examples/non-streaming-funasr-nano-decode-files/main.go

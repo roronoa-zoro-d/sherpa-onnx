@@ -1,1 +1,0 @@
-../nano_v0_1/generate_voices_bin.py

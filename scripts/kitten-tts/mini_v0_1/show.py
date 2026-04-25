@@ -1,1 +1,0 @@
-../nano_v0_1/show.py

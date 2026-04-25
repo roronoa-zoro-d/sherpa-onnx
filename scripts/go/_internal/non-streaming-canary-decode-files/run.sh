@@ -1,1 +1,0 @@
-../../../../go-api-examples/non-streaming-canary-decode-files/run.sh

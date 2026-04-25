@@ -1,4 +1,0 @@
-!run*.sh
-circular_buffer
-remove_silence
-remove_silence_ten_vad

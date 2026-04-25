@@ -1,2 +1,0 @@
-recursive-include sherpa_onnx/lib *
-recursive-include sherpa_onnx/include *

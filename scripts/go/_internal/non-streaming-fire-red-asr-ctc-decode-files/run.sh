@@ -1,1 +1,0 @@
-../../../../go-api-examples/non-streaming-fire-red-asr-ctc-decode-files/run.sh

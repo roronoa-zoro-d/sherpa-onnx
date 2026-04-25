@@ -1,1 +1,0 @@
-../../../../go-api-examples/zero-shot-zipvoice-tts-play/run.sh

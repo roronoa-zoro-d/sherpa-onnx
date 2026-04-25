@@ -1,1 +1,0 @@
-../../../../go-api-examples/speech-enhancement-dpdfnet/main.go

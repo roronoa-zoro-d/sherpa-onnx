@@ -1,1 +1,0 @@
-../../../../go-api-examples/non-streaming-medasr-ctc-decode-files/main.go

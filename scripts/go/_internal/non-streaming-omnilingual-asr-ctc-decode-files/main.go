@@ -1,1 +1,0 @@
-../../../../go-api-examples/non-streaming-omnilingual-asr-ctc-decode-files/main.go

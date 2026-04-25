@@ -1,1 +1,0 @@
-../../../../go-api-examples/non-streaming-moonshine-v2-decode-files/run.sh

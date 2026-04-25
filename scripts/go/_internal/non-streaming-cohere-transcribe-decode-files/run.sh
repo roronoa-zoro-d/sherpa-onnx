@@ -1,1 +1,0 @@
-../../../../go-api-examples/non-streaming-cohere-transcribe-decode-files/run.sh

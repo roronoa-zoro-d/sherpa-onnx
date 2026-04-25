@@ -1,1 +1,0 @@
-../../../../go-api-examples/add-punctuation-online/run.sh

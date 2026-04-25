@@ -1,5 +1,0 @@
-*.sh
-*.onnx
-*.json
-MODEL_CARD
-generate_samples-vits-piper*.py

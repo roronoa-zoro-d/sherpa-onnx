@@ -1,1 +1,0 @@
-../../../../go-api-examples/streaming-decode-files/run-t-one-ctc.sh

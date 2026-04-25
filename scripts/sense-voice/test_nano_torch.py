@@ -1,1 +1,0 @@
-rknn/test_nano_torch.py

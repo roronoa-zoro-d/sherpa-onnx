@@ -1,1 +1,0 @@
-../../../../go-api-examples/offline-tts-play/main.go
