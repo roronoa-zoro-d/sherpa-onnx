@@ -70,7 +70,9 @@ option(SHERPA_ONNX_ENABLE_BINARY "Whether to build binaries" ${SUGGEST_BUILD_BIN
 option(SHERPA_ONNX_ENABLE_TTS "Whether to build TTS related code" OFF)
 option(SHERPA_ONNX_ENABLE_SPEAKER_DIARIZATION "Whether to build speaker diarization related code" OFF)
 option(SHERPA_ONNX_LINK_LIBSTDCPP_STATICALLY "True to link libstdc++ statically. Used only when BUILD_SHARED_LIBS is OFF on Linux" ON)
-option(SHERPA_ONNX_USE_PRE_INSTALLED_ONNXRUNTIME_IF_AVAILABLE "True to use pre-installed onnxruntime if available" ON)
+# dev-kws: default OFF so builds use the FetchContent ONNX Runtime from this
+# repo's cmake (version/layout match sherpa-onnx). Set ON to prefer Homebrew etc.
+option(SHERPA_ONNX_USE_PRE_INSTALLED_ONNXRUNTIME_IF_AVAILABLE "True to use pre-installed onnxruntime if available" OFF)
 option(SHERPA_ONNX_ENABLE_SANITIZER "Whether to enable ubsan and asan" OFF)
 option(SHERPA_ONNX_BUILD_C_API_EXAMPLES "Whether to enable C API examples" ${SUGGEST_BUILD_BINARIES})
 option(SHERPA_ONNX_ENABLE_RKNN "Whether to build for RKNN NPU " OFF)
