@@ -15,9 +15,21 @@
 #include "sherpa-onnx/csrc/macros.h"
 #include "sherpa-onnx/csrc/provider.h"
 #include "sherpa-onnx/csrc/text-utils.h"
+
+// Pre-built ORT (e.g. Homebrew) often omits CoreML EP headers; static sherpa
+// bundles set -DSHERPA_ONNX_DISABLE_COREML. Otherwise only enable when present.
+#undef SHERPA_ONNX_HAVE_COREML_PROVIDER
 #if defined(__APPLE__) && (ORT_API_VERSION >= 15) && \
     !defined(SHERPA_ONNX_DISABLE_COREML)
+#if defined(__has_include)
+#if __has_include("coreml_provider_factory.h")
 #include "coreml_provider_factory.h"  // NOLINT
+#define SHERPA_ONNX_HAVE_COREML_PROVIDER 1
+#endif
+#endif
+#endif
+#ifndef SHERPA_ONNX_HAVE_COREML_PROVIDER
+#define SHERPA_ONNX_HAVE_COREML_PROVIDER 0
 #endif
 
 #if __ANDROID_API__ >= 27
@@ -337,14 +349,15 @@ Ort::SessionOptions GetSessionOptionsImpl(
       break;
     }
     case Provider::kCoreML: {
-#if defined(__APPLE__) && (ORT_API_VERSION >= 15) && \
-    !defined(SHERPA_ONNX_DISABLE_COREML)
+#if SHERPA_ONNX_HAVE_COREML_PROVIDER
       uint32_t coreml_flags = 0;
       (void)OrtSessionOptionsAppendExecutionProvider_CoreML(sess_opts,
                                                             coreml_flags);
 #else
       SHERPA_ONNX_LOGE(
-          "CoreML is for Apple only since onnxruntime>=1.15. Fallback to cpu!");
+          "CoreML is unavailable (need Apple, ORT>=1.15, and "
+          "coreml_provider_factory.h in your ONNX Runtime install). "
+          "Fallback to cpu!");
 #endif
       break;
     }
