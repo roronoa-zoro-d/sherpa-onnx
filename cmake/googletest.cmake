@@ -14,6 +14,7 @@ function(download_googltest)
     /tmp/googletest-1.13.0.tar.gz
     /star-fj/fangjun/download/github/googletest-1.13.0.tar.gz
   )
+  sherpa_onnx_prepend_depdir(possible_file_locations "googletest-1.13.0.tar.gz")
 
   foreach(f IN LISTS possible_file_locations)
     if(EXISTS ${f})

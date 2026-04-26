@@ -15,6 +15,7 @@ function(download_openfst)
     /tmp/openfst-1.8.5-2026-04-11.tar.gz
     /star-fj/fangjun/download/github/openfst-1.8.5-2026-04-11.tar.gz
   )
+  sherpa_onnx_prepend_depdir(possible_file_locations "openfst-1.8.5-2026-04-11.tar.gz")
 
   foreach(f IN LISTS possible_file_locations)
     if(EXISTS ${f})

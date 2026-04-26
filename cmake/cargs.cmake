@@ -14,6 +14,7 @@ function(download_cargs)
     /tmp/cargs-1.0.3.tar.gz
     /star-fj/fangjun/download/github/cargs-1.0.3.tar.gz
   )
+  sherpa_onnx_prepend_depdir(possible_file_locations "cargs-1.0.3.tar.gz")
 
   foreach(f IN LISTS possible_file_locations)
     if(EXISTS ${f})

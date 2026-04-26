@@ -27,6 +27,7 @@ set(possible_file_locations
   /tmp/${onnxruntime_pkg_name}
   /star-fj/fangjun/download/github/${onnxruntime_pkg_name}
 )
+sherpa_onnx_prepend_depdir(possible_file_locations "${onnxruntime_pkg_name}")
 
 foreach(f IN LISTS possible_file_locations)
   if(EXISTS ${f})

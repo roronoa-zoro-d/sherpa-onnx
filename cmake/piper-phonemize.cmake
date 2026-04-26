@@ -14,6 +14,7 @@ function(download_piper_phonemize)
     /tmp/piper-phonemize-78a788e0b719013401572d70fef372e77bff8e43.zip
     /star-fj/fangjun/download/github/piper-phonemize-78a788e0b719013401572d70fef372e77bff8e43.zip
   )
+  sherpa_onnx_prepend_depdir(possible_file_locations "piper-phonemize-78a788e0b719013401572d70fef372e77bff8e43.zip")
 
   foreach(f IN LISTS possible_file_locations)
     if(EXISTS ${f})

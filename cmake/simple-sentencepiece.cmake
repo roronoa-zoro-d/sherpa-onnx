@@ -14,6 +14,7 @@ function(download_simple_sentencepiece)
     /tmp/simple-sentencepiece-0.7.tar.gz
     /star-fj/fangjun/download/github/simple-sentencepiece-0.7.tar.gz
   )
+  sherpa_onnx_prepend_depdir(possible_file_locations "simple-sentencepiece-0.7.tar.gz")
 
   foreach(f IN LISTS possible_file_locations)
     if(EXISTS ${f})

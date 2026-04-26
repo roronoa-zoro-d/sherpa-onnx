@@ -15,6 +15,7 @@ function(download_hclust_cpp)
     /tmp/hclust-cpp-2026-02-25.tar.gz
     /star-fj/fangjun/download/github/hclust-cpp-2026-02-25.tar.gz
   )
+  sherpa_onnx_prepend_depdir(possible_file_locations "hclust-cpp-2026-02-25.tar.gz")
 
   foreach(f IN LISTS possible_file_locations)
     if(EXISTS ${f})

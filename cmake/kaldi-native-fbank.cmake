@@ -18,6 +18,7 @@ function(download_kaldi_native_fbank)
     /tmp/kaldi-native-fbank-1.22.3.tar.gz
     /star-fj/fangjun/download/github/kaldi-native-fbank-1.22.3.tar.gz
   )
+  sherpa_onnx_prepend_depdir(possible_file_locations "kaldi-native-fbank-1.22.3.tar.gz")
 
   foreach(f IN LISTS possible_file_locations)
     if(EXISTS ${f})

@@ -25,6 +25,7 @@ set(possible_file_locations
   ${CMAKE_BINARY_DIR}/onnxruntime-osx-arm64-1.24.4.tgz
   /tmp/onnxruntime-osx-arm64-1.24.4.tgz
 )
+sherpa_onnx_prepend_depdir(possible_file_locations "onnxruntime-osx-arm64-1.24.4.tgz")
 
 foreach(f IN LISTS possible_file_locations)
   if(EXISTS ${f})

@@ -15,6 +15,7 @@ function(download_portaudio)
     /tmp/pa_stable_v190700_20210406.tgz
     /star-fj/fangjun/download/github/pa_stable_v190700_20210406.tgz
   )
+  sherpa_onnx_prepend_depdir(possible_file_locations "pa_stable_v190700_20210406.tgz")
 
   foreach(f IN LISTS possible_file_locations)
     if(EXISTS ${f})

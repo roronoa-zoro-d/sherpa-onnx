@@ -29,6 +29,7 @@ set(possible_file_locations
   /tmp/onnxruntime-linux-arm-1.24.4.zip
   /star-fj/fangjun/download/github/onnxruntime-linux-arm-1.24.4.zip
 )
+sherpa_onnx_prepend_depdir(possible_file_locations "onnxruntime-linux-arm-1.24.4.zip")
 
 foreach(f IN LISTS possible_file_locations)
   if(EXISTS ${f})

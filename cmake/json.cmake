@@ -14,6 +14,7 @@ function(download_json)
     /tmp/json-3.12.0.tar.gz
     /star-fj/fangjun/download/github/json-3.12.0.tar.gz
   )
+  sherpa_onnx_prepend_depdir(possible_file_locations "json-3.12.0.tar.gz")
 
   foreach(f IN LISTS possible_file_locations)
     if(EXISTS ${f})

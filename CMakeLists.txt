@@ -25,6 +25,18 @@ set(CMAKE_POLICY_DEFAULT_CMP0069 NEW)
 
 project(sherpa-onnx)
 
+# Persistent third-party cache under ./depends/ (survives `rm -rf build`).
+# - FETCHCONTENT_BASE_DIR: extracted FetchContent sources (kaldi, onnxruntime, etc.)
+# - SHERPA_ONNX_DEPS_DIR: also searched first for *.zip/*.tar.gz via sherpa_onnx_prepend_depdir()
+set(SHERPA_ONNX_DEPS_DIR "${CMAKE_SOURCE_DIR}/depends" CACHE PATH
+    "Put pre-downloaded dependency archives here; FetchContent extract cache uses depends/_fetchcontent/")
+file(MAKE_DIRECTORY "${SHERPA_ONNX_DEPS_DIR}")
+if(NOT FETCHCONTENT_BASE_DIR)
+  set(FETCHCONTENT_BASE_DIR "${SHERPA_ONNX_DEPS_DIR}/_fetchcontent" CACHE PATH
+      "CMake FetchContent base dir (default: depends/_fetchcontent; keeps downloads outside build/)")
+endif()
+include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/sherpa-onnx-deps.cmake")
+
 # Remember to update
 # ./CHANGELOG.md
 # ./new-release.sh

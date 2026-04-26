@@ -34,6 +34,7 @@ set(possible_file_locations
   /tmp/onnxruntime-linux-x64-gpu-1.24.4.tgz
   /star-fj/fangjun/download/github/onnxruntime-linux-x64-gpu-1.24.4.tgz
 )
+sherpa_onnx_prepend_depdir(possible_file_locations "onnxruntime-linux-x64-gpu-1.24.4.tgz")
 
 foreach(f IN LISTS possible_file_locations)
   if(EXISTS ${f})

@@ -27,6 +27,7 @@ function(download_espeak_ng_for_piper)
     /tmp/espeak-ng-f6fed6c58b5e0998b8e68c6610125e2d07d595a7.zip
     /star-fj/fangjun/download/github/espeak-ng-f6fed6c58b5e0998b8e68c6610125e2d07d595a7.zip
   )
+  sherpa_onnx_prepend_depdir(possible_file_locations "espeak-ng-f6fed6c58b5e0998b8e68c6610125e2d07d595a7.zip")
 
   foreach(f IN LISTS possible_file_locations)
     if(EXISTS ${f})

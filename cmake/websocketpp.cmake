@@ -15,6 +15,7 @@ function(download_websocketpp)
     /tmp/websocketpp-b9aeec6eaf3d5610503439b4fae3581d9aff08e8.zip
     /star-fj/fangjun/download/github/websocketpp-b9aeec6eaf3d5610503439b4fae3581d9aff08e8.zip
   )
+  sherpa_onnx_prepend_depdir(possible_file_locations "websocketpp-b9aeec6eaf3d5610503439b4fae3581d9aff08e8.zip")
 
   foreach(f IN LISTS possible_file_locations)
     if(EXISTS ${f})

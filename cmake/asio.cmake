@@ -14,6 +14,7 @@ function(download_asio)
     /tmp/asio-asio-1-24-0.tar.gz
     /star-fj/fangjun/download/github/asio-asio-1-24-0.tar.gz
   )
+  sherpa_onnx_prepend_depdir(possible_file_locations "asio-asio-1-24-0.tar.gz")
 
   foreach(f IN LISTS possible_file_locations)
     if(EXISTS ${f})

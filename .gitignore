@@ -1,4 +1,6 @@
 build
+# FetchContent extract cache (see SHERPA_ONNX_DEPS_DIR / FETCHCONTENT_BASE_DIR in CMakeLists.txt)
+depends/_fetchcontent/
 *.zip
 *.tgz
 *.sw?

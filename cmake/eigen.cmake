@@ -13,6 +13,7 @@ function(download_eigen)
     /tmp/eigen-5.0.1.tar.gz
     /star-fj/fangjun/download/github/eigen-5.0.1.tar.gz
   )
+  sherpa_onnx_prepend_depdir(possible_file_locations "eigen-5.0.1.tar.gz")
 
   foreach(f IN LISTS possible_file_locations)
     if(EXISTS ${f})

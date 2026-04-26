@@ -36,6 +36,7 @@ else()
         ${PROJECT_BINARY_DIR}/microsoft.ml.onnxruntime.directml.1.14.1.nupkg
         /tmp/microsoft.ml.onnxruntime.directml.1.14.1.nupkg
     )
+    sherpa_onnx_prepend_depdir(possible_file_locations "microsoft.ml.onnxruntime.directml.1.14.1.nupkg")
 
     foreach(f IN LISTS possible_file_locations)
       if(EXISTS ${f})

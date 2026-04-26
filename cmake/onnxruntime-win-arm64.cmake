@@ -53,6 +53,7 @@ set(possible_file_locations
   $ENV{TMP}/${onnxruntime_filename}
   $ENV{TEMP}/${onnxruntime_filename}
 )
+sherpa_onnx_prepend_depdir(possible_file_locations "${onnxruntime_filename}")
 
 foreach(f IN LISTS possible_file_locations)
   if(EXISTS ${f})

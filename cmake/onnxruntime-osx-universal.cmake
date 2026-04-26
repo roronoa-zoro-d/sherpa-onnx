@@ -26,6 +26,7 @@ set(possible_file_locations
   ${CMAKE_BINARY_DIR}/onnxruntime-osx-universal2-1.24.4.zip
   /tmp/onnxruntime-osx-universal2-1.24.4.zip
 )
+sherpa_onnx_prepend_depdir(possible_file_locations "onnxruntime-osx-universal2-1.24.4.zip")
 
 foreach(f IN LISTS possible_file_locations)
   if(EXISTS ${f})

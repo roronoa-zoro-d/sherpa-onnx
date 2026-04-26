@@ -28,6 +28,7 @@ set(possible_file_locations
   /tmp/onnxruntime-linux-x64-static_lib-1.24.4-glibc2_17.zip
   /star-fj/fangjun/download/github/onnxruntime-linux-x64-static_lib-1.24.4-glibc2_17.zip
 )
+sherpa_onnx_prepend_depdir(possible_file_locations "onnxruntime-linux-x64-static_lib-1.24.4-glibc2_17.zip")
 
 foreach(f IN LISTS possible_file_locations)
   if(EXISTS ${f})

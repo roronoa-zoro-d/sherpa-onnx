@@ -77,6 +77,7 @@ set(possible_file_locations
   /tmp/onnxruntime-linux-aarch64-gpu-cuda12-${v}.tar.bz2
   /star-fj/fangjun/download/github/onnxruntime-linux-aarch64-gpu-cuda12-${v}.tar.bz2
 )
+sherpa_onnx_prepend_depdir(possible_file_locations "onnxruntime-linux-aarch64-gpu-${v}.tar.bz2")
 
 foreach(f IN LISTS possible_file_locations)
   if(EXISTS ${f})
