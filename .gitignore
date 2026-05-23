@@ -1,5 +1,5 @@
 build
-# FetchContent extract cache (see SHERPA_ONNX_DEPS_DIR / FETCHCONTENT_BASE_DIR in CMakeLists.txt)
+# Legacy FetchContent dir under depends (default is now <build>/depend; safe to delete)
 depends/_fetchcontent/
 *.zip
 *.tgz

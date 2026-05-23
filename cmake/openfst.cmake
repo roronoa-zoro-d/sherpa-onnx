@@ -9,6 +9,7 @@ function(download_openfst)
   # If you don't have access to the Internet,
   # please pre-download it
   set(possible_file_locations
+    ${CMAKE_SOURCE_DIR}/depends/openfst-1.8.5-2026-04-11.tar.gz
     $ENV{HOME}/Downloads/openfst-1.8.5-2026-04-11.tar.gz
     ${CMAKE_SOURCE_DIR}/openfst-1.8.5-2026-04-11.tar.gz
     ${CMAKE_BINARY_DIR}/openfst-1.8.5-2026-04-11.tar.gz

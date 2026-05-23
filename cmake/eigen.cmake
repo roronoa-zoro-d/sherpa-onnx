@@ -7,6 +7,7 @@ function(download_eigen)
   # If you don't have access to the Internet,
   # please pre-download eigen
   set(possible_file_locations
+    ${CMAKE_SOURCE_DIR}/depends/eigen-5.0.1.tar.gz
     $ENV{HOME}/Downloads/eigen-5.0.1.tar.gz
     ${CMAKE_SOURCE_DIR}/eigen-5.0.1.tar.gz
     ${CMAKE_BINARY_DIR}/eigen-5.0.1.tar.gz

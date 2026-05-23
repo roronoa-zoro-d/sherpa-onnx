@@ -12,6 +12,7 @@ function(download_kaldi_native_fbank)
   # If you don't have access to the Internet,
   # please pre-download kaldi-native-fbank
   set(possible_file_locations
+    ${CMAKE_SOURCE_DIR}/depends/kaldi-native-fbank-1.22.3.tar.gz
     $ENV{HOME}/Downloads/kaldi-native-fbank-1.22.3.tar.gz
     ${CMAKE_SOURCE_DIR}/kaldi-native-fbank-1.22.3.tar.gz
     ${CMAKE_BINARY_DIR}/kaldi-native-fbank-1.22.3.tar.gz

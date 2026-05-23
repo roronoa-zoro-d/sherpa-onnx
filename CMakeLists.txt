@@ -25,15 +25,16 @@ set(CMAKE_POLICY_DEFAULT_CMP0069 NEW)
 
 project(sherpa-onnx)
 
-# Persistent third-party cache under ./depends/ (survives `rm -rf build`).
-# - FETCHCONTENT_BASE_DIR: extracted FetchContent sources (kaldi, onnxruntime, etc.)
-# - SHERPA_ONNX_DEPS_DIR: also searched first for *.zip/*.tar.gz via sherpa_onnx_prepend_depdir()
+# Offline-friendly layout:
+# - SHERPA_ONNX_DEPS_DIR (= <source>/depends by default): ONLY copy *.tar.gz/*.zip here for others / offline
+#   CMake searches ${SHERPA_ONNX_DEPS_DIR}/<filename> first (see sherpa_onnx_prepend_depdir in cmake/sherpa-onnx-deps.cmake).
+# - FETCHCONTENT_BASE_DIR: FetchContent *-src / *-build / *-subbuild (default: <build>/depend — not under depends/)
 set(SHERPA_ONNX_DEPS_DIR "${CMAKE_SOURCE_DIR}/depends" CACHE PATH
-    "Put pre-downloaded dependency archives here; FetchContent extract cache uses depends/_fetchcontent/")
+    "Pre-downloaded dependency archives only (e.g. depends/kaldi-decoder-0.3.0.tar.gz). Safe to copy to air-gapped machines.")
 file(MAKE_DIRECTORY "${SHERPA_ONNX_DEPS_DIR}")
 if(NOT FETCHCONTENT_BASE_DIR)
-  set(FETCHCONTENT_BASE_DIR "${SHERPA_ONNX_DEPS_DIR}/_fetchcontent" CACHE PATH
-      "CMake FetchContent base dir (default: depends/_fetchcontent; keeps downloads outside build/)")
+  set(FETCHCONTENT_BASE_DIR "${CMAKE_BINARY_DIR}/depend" CACHE PATH
+      "FetchContent extract dir (default: <binary_dir>/depend so *-src/*-build stay out of depends/)")
 endif()
 include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/sherpa-onnx-deps.cmake")
 

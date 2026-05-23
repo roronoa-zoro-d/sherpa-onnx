@@ -8,6 +8,7 @@ function(download_json)
   # If you don't have access to the Internet,
   # please pre-download json
   set(possible_file_locations
+    ${CMAKE_SOURCE_DIR}/depends/json-3.12.0.tar.gz
     $ENV{HOME}/Downloads/json-3.12.0.tar.gz
     ${CMAKE_SOURCE_DIR}/json-3.12.0.tar.gz
     ${CMAKE_BINARY_DIR}/json-3.12.0.tar.gz

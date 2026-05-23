@@ -20,6 +20,7 @@ set(onnxruntime_HASH "SHA256=4752fa848d9d36143e3942537ff71736d2e581ce192a528482f
 # please download onnxruntime to one of the following locations.
 # You can add more if you want.
 set(possible_file_locations
+  ${CMAKE_SOURCE_DIR}/depends/onnxruntime-osx-arm64-static_lib-1.24.4.zip
   $ENV{HOME}/Downloads/onnxruntime-osx-arm64-static_lib-1.24.4.zip
   ${CMAKE_SOURCE_DIR}/onnxruntime-osx-arm64-static_lib-1.24.4.zip
   ${CMAKE_BINARY_DIR}/onnxruntime-osx-arm64-static_lib-1.24.4.zip

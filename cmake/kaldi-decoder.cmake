@@ -1,6 +1,28 @@
 function(download_kaldi_decoder)
   include(FetchContent)
 
+  # When kaldifst-src already exists (e.g. second cmake run), stage OpenFst next to it for offline nested openfst.cmake.
+  set(_kfst_src "${FETCHCONTENT_BASE_DIR}/kaldifst-src")
+  set(_of_can "openfst-1.8.5-2026-04-10.tar.gz")
+  if(EXISTS "${_kfst_src}")
+    foreach(_cand IN ITEMS
+        "${SHERPA_ONNX_DEPS_DIR}/${_of_can}"
+        "${CMAKE_SOURCE_DIR}/depends/${_of_can}"
+        "${SHERPA_ONNX_DEPS_DIR}/openfst-kaldifst-1.8.5-2026-04-10.tar.gz"
+        "${CMAKE_SOURCE_DIR}/depends/openfst-kaldifst-1.8.5-2026-04-10.tar.gz"
+      )
+      if(EXISTS "${_cand}")
+        get_filename_component(_of_bn "${_cand}" NAME)
+        file(COPY "${_cand}" DESTINATION "${_kfst_src}")
+        if(NOT _of_bn STREQUAL "${_of_can}")
+          file(RENAME "${_kfst_src}/${_of_bn}" "${_kfst_src}/${_of_can}")
+        endif()
+        message(STATUS "Offline: staged ${_of_can} into kaldifst-src for nested OpenFst")
+        break()
+      endif()
+    endforeach()
+  endif()
+
   set(kaldi_decoder_URL  "https://github.com/k2-fsa/kaldi-decoder/archive/refs/tags/v0.3.0.tar.gz")
   set(kaldi_decoder_HASH "SHA256=b9f34cfb4fd3b1344100eead79ef4d37aa15962274b9e3056de345021f76a1b0")
 
@@ -9,8 +31,9 @@ function(download_kaldi_decoder)
   set(KALDIFST_BUILD_PYTHON OFF CACHE BOOL "" FORCE)
 
   # If you don't have access to the Internet,
-  # please pre-download kaldi-decoder
+  # please pre-download kaldi-decoder (first tried: ${SHERPA_ONNX_DEPS_DIR}/… i.e. <source>/depends/…)
   set(possible_file_locations
+    ${CMAKE_SOURCE_DIR}/depends/kaldi-decoder-0.3.0.tar.gz
     $ENV{HOME}/Downloads/kaldi-decoder-0.3.0.tar.gz
     ${CMAKE_SOURCE_DIR}/kaldi-decoder-0.3.0.tar.gz
     ${CMAKE_BINARY_DIR}/kaldi-decoder-0.3.0.tar.gz
@@ -41,6 +64,22 @@ function(download_kaldi_decoder)
   endif()
   message(STATUS "kaldi-decoder is downloaded to ${kaldi_decoder_SOURCE_DIR}")
   message(STATUS "kaldi-decoder's binary dir is ${kaldi_decoder_BINARY_DIR}")
+
+  # Nested FetchContent inside kaldi_decoder looks for tarballs next to kaldi_decoder-src.
+  foreach(_nest IN ITEMS eigen-3.4.0.tar.gz kaldifst-1.8.0.tar.gz)
+    set(_ok FALSE)
+    foreach(_base IN ITEMS "${SHERPA_ONNX_DEPS_DIR}" "${CMAKE_SOURCE_DIR}/depends")
+      if(EXISTS "${_base}/${_nest}")
+        file(COPY "${_base}/${_nest}" DESTINATION "${kaldi_decoder_SOURCE_DIR}")
+        message(STATUS "Offline: staged ${_nest} into kaldi-decoder tree (${_base})")
+        set(_ok TRUE)
+        break()
+      endif()
+    endforeach()
+    if(NOT _ok)
+      message(WARNING "Missing ${_nest} under depends/ — nested CMake may download from the network")
+    endif()
+  endforeach()
 
   include_directories(${kaldi_decoder_SOURCE_DIR})
 

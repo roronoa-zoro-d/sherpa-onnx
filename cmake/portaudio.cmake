@@ -8,6 +8,7 @@ function(download_portaudio)
   # If you don't have access to the Internet, please download it to your
   # local drive and modify the following line according to your needs.
   set(possible_file_locations
+    ${CMAKE_SOURCE_DIR}/depends/pa_stable_v190700_20210406.tgz
     $ENV{HOME}/Downloads/pa_stable_v190700_20210406.tgz
     $ENV{HOME}/asr/pa_stable_v190700_20210406.tgz
     ${CMAKE_SOURCE_DIR}/pa_stable_v190700_20210406.tgz

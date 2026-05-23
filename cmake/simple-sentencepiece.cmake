@@ -8,6 +8,7 @@ function(download_simple_sentencepiece)
   # If you don't have access to the Internet,
   # please pre-download simple-sentencepiece
   set(possible_file_locations
+    ${CMAKE_SOURCE_DIR}/depends/simple-sentencepiece-0.7.tar.gz
     $ENV{HOME}/Downloads/simple-sentencepiece-0.7.tar.gz
     ${CMAKE_SOURCE_DIR}/simple-sentencepiece-0.7.tar.gz
     ${CMAKE_BINARY_DIR}/simple-sentencepiece-0.7.tar.gz
