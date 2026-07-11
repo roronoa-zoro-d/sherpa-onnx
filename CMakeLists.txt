@@ -80,6 +80,7 @@ option(SHERPA_ONNX_ENABLE_WASM_VAD_ASR "Whether to enable WASM for VAD+ASR" OFF)
 option(SHERPA_ONNX_ENABLE_WASM_NODEJS "Whether to enable WASM for NodeJS" OFF)
 option(SHERPA_ONNX_ENABLE_WASM_SPEECH_ENHANCEMENT "Whether to enable WASM for speech enhancement" OFF)
 option(SHERPA_ONNX_ENABLE_BINARY "Whether to build binaries" ${SUGGEST_BUILD_BINARIES})
+option(SHERPA_ONNX_ENABLE_ZEEO_KWS "Whether to build zeeo_kws wake-word library" ON)
 option(SHERPA_ONNX_ENABLE_TTS "Whether to build TTS related code" OFF)
 option(SHERPA_ONNX_ENABLE_SPEAKER_DIARIZATION "Whether to build speaker diarization related code" OFF)
 option(SHERPA_ONNX_LINK_LIBSTDCPP_STATICALLY "True to link libstdc++ statically. Used only when BUILD_SHARED_LIBS is OFF on Linux" ON)
@@ -613,6 +614,10 @@ endif()
 
 add_subdirectory(sherpa-onnx)
 
+if(SHERPA_ONNX_ENABLE_ZEEO_KWS)
+  add_subdirectory(zeeo_kws)
+endif()
+
 if(SHERPA_ONNX_ENABLE_C_API AND SHERPA_ONNX_ENABLE_BINARY AND SHERPA_ONNX_BUILD_C_API_EXAMPLES)
   add_subdirectory(c-api-examples)
 endif()
@@ -653,4 +658,11 @@ install(
   DESTINATION
     .
 )
-message(STATUS "CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
+
+if(SHERPA_ONNX_ENABLE_ZEEO_KWS)
+  if(TARGET sherpa-onnx-keyword-spotter-alsa AND TARGET zeeo_kws)
+    target_link_libraries(sherpa-onnx-keyword-spotter-alsa PRIVATE zeeo_kws)
+    target_include_directories(sherpa-onnx-keyword-spotter-alsa PRIVATE
+      ${CMAKE_SOURCE_DIR}/zeeo_kws/include)
+  endif()
+endif()

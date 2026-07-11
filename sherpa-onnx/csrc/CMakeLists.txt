@@ -539,7 +539,7 @@ if(SHERPA_ONNX_ENABLE_BINARY)
   )
 endif()
 
-if(SHERPA_ONNX_HAS_ALSA AND SHERPA_ONNX_ENABLE_BINARY)
+if(SHERPA_ONNX_HAS_ALSA AND SHERPA_ONNX_ENABLE_BINARY AND SHERPA_ONNX_ENABLE_ZEEO_KWS)
   add_executable(sherpa-onnx-keyword-spotter-alsa sherpa-onnx-keyword-spotter-alsa.cc alsa.cc)
 
   set(exes

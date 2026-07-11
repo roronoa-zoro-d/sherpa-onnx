@@ -91,7 +91,73 @@ bool Microphone::OpenDevice(int index, int sample_rate, int channel,
   return true;
 }
 
+bool Microphone::OpenBlockingDevice(int index, int sample_rate, int channel,
+                                    int32_t frames_per_buffer) {
+  if (index < 0 || index >= Pa_GetDeviceCount()) {
+    fprintf(stderr, "Invalid device index: %d\n", index);
+    return false;
+  }
+
+  const PaDeviceInfo *info = Pa_GetDeviceInfo(index);
+  if (!info) {
+    fprintf(stderr, "No device info found for index: %d\n", index);
+    return false;
+  }
+
+  CloseDevice();
+
+  fprintf(stderr, "Use device: %d\n", index);
+  fprintf(stderr, "  Name: %s\n", info->name);
+  fprintf(stderr, "  Max input channels: %d\n", info->maxInputChannels);
+
+  PaStreamParameters param;
+  param.device = index;
+  param.channelCount = channel;
+  param.sampleFormat = paFloat32;
+  param.suggestedLatency = info->defaultLowInputLatency;
+  param.hostApiSpecificStreamInfo = nullptr;
+
+  PaError err = Pa_OpenStream(&stream, &param, nullptr, sample_rate,
+                              frames_per_buffer, paClipOff, nullptr, nullptr);
+  if (err != paNoError) {
+    fprintf(stderr, "portaudio error: %s\n", Pa_GetErrorText(err));
+    return false;
+  }
+
+  err = Pa_StartStream(stream);
+  fprintf(stderr, "Started\n");
+
+  if (err != paNoError) {
+    fprintf(stderr, "portaudio error: %s\n", Pa_GetErrorText(err));
+    CloseDevice();
+    return false;
+  }
+
+  frames_per_buffer_ = frames_per_buffer;
+  return true;
+}
+
+int32_t Microphone::Read(float *buffer, int32_t num_frames) {
+  if (!stream || !buffer || num_frames <= 0) {
+    return 0;
+  }
+
+  PaError err = Pa_ReadStream(stream, buffer, num_frames);
+  if (err == paInputOverflowed) {
+    fprintf(stderr, "PortAudio input overflowed\n");
+    return num_frames;
+  }
+
+  if (err != paNoError) {
+    fprintf(stderr, "Pa_ReadStream error: %s\n", Pa_GetErrorText(err));
+    return 0;
+  }
+
+  return num_frames;
+}
+
 void Microphone::CloseDevice() {
+  frames_per_buffer_ = 0;
   if (stream) {
     PaError err = Pa_CloseStream(stream);
     if (err != paNoError) {

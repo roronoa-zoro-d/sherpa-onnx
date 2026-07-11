@@ -1,0 +1,3 @@
+# 编译产物，由 run_build_lib.sh 生成
+*
+!.gitignore

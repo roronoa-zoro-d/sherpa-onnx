@@ -5,16 +5,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <algorithm>
 #include <cstdint>
+#include <memory>
 #include <string>
 #include <vector>
 
 #include "sherpa-onnx/csrc/alsa.h"
-#include "sherpa-onnx/csrc/macros.h"
 #include "sherpa-onnx/csrc/display.h"
 #include "sherpa-onnx/csrc/keyword-spotter.h"
+#include "sherpa-onnx/csrc/macros.h"
 #include "sherpa-onnx/csrc/parse-options.h"
+#include "zeeo_kws/kws_engine.h"
 
 bool stop = false;
 
@@ -78,9 +79,27 @@ as the device_name.
     fprintf(stderr, "Errors in config!\n");
     return -1;
   }
-  sherpa_onnx::KeywordSpotter spotter(config);
 
-  int32_t expected_sample_rate = config.feat_config.sampling_rate;
+  zeeo_kws::KwsConfig kws_cfg;
+  kws_cfg.tokens = config.model_config.tokens;
+  kws_cfg.encoder = config.model_config.transducer.encoder;
+  kws_cfg.decoder = config.model_config.transducer.decoder;
+  kws_cfg.joiner = config.model_config.transducer.joiner;
+  kws_cfg.keywords_file = config.keywords_file;
+  kws_cfg.sample_rate = config.feat_config.sampling_rate;
+  kws_cfg.num_threads = config.model_config.num_threads;
+  kws_cfg.keywords_threshold = config.keywords_threshold;
+  kws_cfg.keywords_score = config.keywords_score;
+
+  std::unique_ptr<zeeo_kws::KwsEngine> kws_engine;
+  try {
+    kws_engine = std::make_unique<zeeo_kws::KwsEngine>(kws_cfg);
+  } catch (const std::exception &e) {
+    fprintf(stderr, "Failed to create KwsEngine: %s\n", e.what());
+    return -1;
+  }
+
+  int32_t expected_sample_rate = kws_engine->sample_rate();
 
   std::string device_name = po.GetArg(1);
   sherpa_onnx::Alsa alsa(device_name.c_str());
@@ -94,30 +113,30 @@ as the device_name.
 
   int32_t chunk = 0.1 * alsa.GetActualSampleRate();
 
-  std::string last_text;
-
-  auto stream = spotter.CreateStream();
-
   sherpa_onnx::Display display;
 
   int32_t keyword_index = 0;
+  std::vector<int16_t> pcm_chunk(chunk);
+
   while (!stop) {
     const std::vector<float> &samples = alsa.Read(chunk);
 
-    stream->AcceptWaveform(expected_sample_rate, samples.data(),
-                           samples.size());
-
-    while (spotter.IsReady(stream.get())) {
-      spotter.DecodeStream(stream.get());
-
-      const auto r = spotter.GetResult(stream.get());
-      if (!r.keyword.empty()) {
-        display.Print(keyword_index, r.AsJsonString());
-        fflush(stderr);
-        keyword_index++;
-
-        spotter.Reset(stream.get());
+    for (size_t i = 0; i < samples.size(); ++i) {
+      float v = samples[i];
+      if (v > 1.f) {
+        v = 1.f;
+      } else if (v < -1.f) {
+        v = -1.f;
       }
+      pcm_chunk[i] = static_cast<int16_t>(v * 32767.f);
+    }
+
+    auto events = kws_engine->ProcessInt16(pcm_chunk.data(),
+                                          static_cast<int32_t>(samples.size()));
+    for (const auto &ev : events) {
+      display.Print(keyword_index, ev.json);
+      fflush(stderr);
+      ++keyword_index;
     }
   }
 

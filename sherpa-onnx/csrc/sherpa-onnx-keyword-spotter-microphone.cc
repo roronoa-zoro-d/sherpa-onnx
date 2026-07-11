@@ -6,31 +6,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <algorithm>
+#include <vector>
 
-#include "portaudio.h"  // NOLINT
 #include "sherpa-onnx/csrc/display.h"
-#include "sherpa-onnx/csrc/macros.h"
 #include "sherpa-onnx/csrc/keyword-spotter.h"
+#include "sherpa-onnx/csrc/macros.h"
 #include "sherpa-onnx/csrc/microphone.h"
 
 bool stop = false;
 float mic_sample_rate = 16000;
-
-static int32_t RecordCallback(const void *input_buffer,
-                              void * /*output_buffer*/,
-                              unsigned long frames_per_buffer,  // NOLINT
-                              const PaStreamCallbackTimeInfo * /*time_info*/,
-                              PaStreamCallbackFlags /*status_flags*/,
-                              void *user_data) {
-  auto stream = reinterpret_cast<sherpa_onnx::OnlineStream *>(user_data);
-
-  stream->AcceptWaveform(mic_sample_rate,
-                         reinterpret_cast<const float *>(input_buffer),
-                         frames_per_buffer);
-
-  return stop ? paComplete : paContinue;
-}
 
 static void Handler(int32_t /*sig*/) {
   stop = true;
@@ -80,8 +64,8 @@ for a list of pre-trained models to download.
 
   sherpa_onnx::Microphone mic;
 
-  int32_t device_index = Pa_GetDefaultInputDevice();
-  if (device_index == paNoDevice) {
+  int32_t device_index = mic.GetDefaultInputDevice();
+  if (device_index < 0) {
     fprintf(stderr, "No default input device found\n");
     fprintf(stderr, "If you are using Linux, please switch to \n");
     fprintf(stderr, " ./bin/sherpa-onnx-keyword-spotter-alsa \n");
@@ -102,15 +86,25 @@ for a list of pre-trained models to download.
     fprintf(stderr, "Use sample rate %f for mic\n", mic_sample_rate);
   }
 
-  if (!mic.OpenDevice(device_index, mic_sample_rate, 1, RecordCallback,
-                      s.get())) {
+  int32_t chunk = static_cast<int32_t>(0.1 * mic_sample_rate);
+  if (!mic.OpenBlockingDevice(device_index, static_cast<int32_t>(mic_sample_rate),
+                            1, chunk)) {
     fprintf(stderr, "portaudio error: %d\n", device_index);
     SHERPA_ONNX_EXIT(EXIT_FAILURE);
   }
 
   int32_t keyword_index = 0;
   sherpa_onnx::Display display;
+  std::vector<float> samples(chunk);
+
   while (!stop) {
+    int32_t n = mic.Read(samples.data(), chunk);
+    if (n <= 0) {
+      continue;
+    }
+
+    s->AcceptWaveform(static_cast<int32_t>(mic_sample_rate), samples.data(), n);
+
     while (spotter.IsReady(s.get())) {
       spotter.DecodeStream(s.get());
 
@@ -123,8 +117,6 @@ for a list of pre-trained models to download.
         spotter.Reset(s.get());
       }
     }
-
-    Pa_Sleep(20);  // sleep for 20ms
   }
 
   return 0;
